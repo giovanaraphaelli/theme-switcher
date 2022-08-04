@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Box from './components/Box';
+import ThemeContext from './contexts/ThemeContext';
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    const storagedTheme = localStorage.getItem('theme');
+    return storagedTheme || 'light';
+  });
+
+  const handleThemeChange = ({ target }) => {
+    const newTheme = target.checked ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+    setTheme(newTheme);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeContext.Provider value={theme}>
+      <main className={theme}>
+        <p>Texto</p>
+        <Box />
+        <label>
+          <input
+            type="checkbox"
+            checked={theme === 'dark'}
+            onChange={handleThemeChange}
+          />
+          Modo Escuro
+        </label>
+      </main>
+    </ThemeContext.Provider>
   );
 }
 
